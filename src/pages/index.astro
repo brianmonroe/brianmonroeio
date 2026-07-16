@@ -1,0 +1,195 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import {
+	ArrowUpRight,
+	Camera,
+	ChartNoAxesCombined,
+	Code2,
+	Mail,
+	MonitorPlay,
+	Search,
+	Sparkles,
+} from 'lucide-astro';
+
+const services = [
+	{
+		title: 'Web Development & Optimization',
+		description:
+			'Custom websites, landing pages, ecommerce, accessibility improvements, and performance work for organizations that need a stronger digital home.',
+		Icon: Code2,
+	},
+	{
+		title: 'Search Engine Optimization',
+		description:
+			'Technical SEO, metadata strategy, site audits, local search improvements, and visibility planning built around practical next steps.',
+		Icon: Search,
+	},
+	{
+		title: 'Commercial & Event Photography',
+		description:
+			'Brand, product, event, and organization photography that gives websites, campaigns, and social channels stronger original visuals.',
+		Icon: Camera,
+	},
+	{
+		title: 'Social Media & Content Creation',
+		description:
+			'Content planning, graphics, photography, and marketing assets designed to keep your message clear, consistent, and useful.',
+		Icon: Sparkles,
+	},
+	{
+		title: 'Digital Display & Event Graphics',
+		description:
+			'Digital signage, event displays, sponsor presentations, TV slides, and branded visuals for live events and public spaces.',
+		Icon: MonitorPlay,
+	},
+	{
+		title: 'Analytics & Performance Tracking',
+		description:
+			'Website and social analytics, reporting, and performance tracking to understand what is working and where to improve.',
+		Icon: ChartNoAxesCombined,
+	},
+];
+
+const contactLinks = [
+	{
+		label: 'Email',
+		href: 'mailto:brian@brianmonroe.io',
+		Icon: Mail,
+	},
+	{
+		label: 'Web Project',
+		href: 'mailto:brian@brianmonroe.io?subject=Web%20Project%20Inquiry',
+		Icon: Code2,
+	},
+	{
+		label: 'SEO Audit',
+		href: 'mailto:brian@brianmonroe.io?subject=SEO%20Audit%20Inquiry',
+		Icon: Search,
+	},
+	{
+		label: 'Photography',
+		href: 'mailto:brian@brianmonroe.io?subject=Photography%20Inquiry',
+		Icon: Camera,
+	},
+	{
+		label: 'Event Graphics',
+		href: 'mailto:brian@brianmonroe.io?subject=Event%20Graphics%20Inquiry',
+		Icon: MonitorPlay,
+	},
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body class="bg-neutral-950 text-neutral-950">
+		<main class="min-h-screen w-full max-w-none bg-[#f7f4ee] p-0">
+			<section class="relative isolate overflow-hidden">
+				<div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(200,90,22,0.18),transparent_34%),linear-gradient(135deg,#fffaf2_0%,#f3efe6_54%,#e9eced_100%)]"></div>
+				<div class="absolute inset-x-0 top-0 -z-10 h-28 border-b border-white/70 bg-white/35 backdrop-blur-sm"></div>
+
+				<div class="mx-auto flex min-h-screen max-w-7xl flex-col px-5 py-6 sm:px-6 lg:px-8">
+					<header class="flex items-center justify-between gap-5">
+						<a href="/" class="inline-flex items-center" aria-label="Brian Monroe home">
+							<img
+								src="/logo/brianmonroeio.webp"
+								alt="Brian Monroe"
+								class="h-12 w-auto rounded-none sm:h-14"
+							/>
+						</a>
+
+						<a
+							href="mailto:brian@brianmonroe.io"
+							class="inline-flex items-center gap-2 rounded-md bg-neutral-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-800"
+						>
+							<Mail size={17} aria-hidden="true" />
+							<span>Start a Project</span>
+						</a>
+					</header>
+
+					<div class="grid flex-1 items-center gap-12 py-16 lg:grid-cols-[1.02fr_0.98fr] lg:py-20">
+						<div>
+							<p class="text-sm font-bold uppercase tracking-[0.22em] text-orange-700">
+								Web Development / SEO / Photography / Digital Design
+							</p>
+
+							<h1 class="mt-6 max-w-4xl text-5xl font-bold leading-[0.98] text-neutral-950 sm:text-6xl lg:text-7xl">
+								Helping businesses, organizations, and events show up better online.
+							</h1>
+
+							<p class="mt-7 max-w-2xl text-lg leading-8 text-neutral-700">
+								I build practical, polished digital experiences: fast websites, cleaner search visibility, original photography, social content, event graphics, and reporting that helps you make better decisions.
+							</p>
+
+							<div class="mt-9 flex flex-wrap items-center gap-3">
+								<a
+									href="mailto:brian@brianmonroe.io"
+									class="inline-flex items-center gap-2 rounded-md bg-orange-700 px-5 py-3 text-base font-semibold text-white transition hover:bg-orange-800"
+								>
+									<Mail size={19} aria-hidden="true" />
+									Email Me
+								</a>
+								<a
+									href="/work"
+									class="inline-flex items-center gap-2 rounded-md border border-neutral-300 bg-white/70 px-5 py-3 text-base font-semibold text-neutral-950 transition hover:border-neutral-500 hover:bg-white"
+								>
+									View Work
+									<ArrowUpRight size={18} aria-hidden="true" />
+								</a>
+							</div>
+						</div>
+
+						<div class="border border-neutral-200 bg-white/82 p-5 shadow-[0_24px_80px_rgba(15,18,25,0.13)] backdrop-blur rounded-lg">
+							<div class="grid gap-3 sm:grid-cols-2">
+								{services.map(({ title, description, Icon }) => (
+									<article class="rounded-lg border border-neutral-200 bg-white p-5">
+										<div class="flex h-10 w-10 items-center justify-center rounded-md bg-orange-50 text-orange-700">
+											<Icon size={21} aria-hidden="true" />
+										</div>
+										<h2 class="mt-4 text-xl font-bold leading-tight text-neutral-950">
+											{title}
+										</h2>
+										<p class="mt-3 text-sm leading-6 text-neutral-600">
+											{description}
+										</p>
+									</article>
+								))}
+							</div>
+						</div>
+					</div>
+
+					<section class="mb-8 rounded-lg border border-neutral-200 bg-neutral-950 px-5 py-5 text-white shadow-[0_16px_45px_rgba(15,18,25,0.18)] sm:px-6">
+						<div class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+							<div>
+								<p class="text-xs font-bold uppercase tracking-[0.22em] text-orange-400">
+									Contact
+								</p>
+								<h2 class="mt-2 text-2xl font-bold text-white">
+									Ready to talk through a project?
+								</h2>
+							</div>
+
+							<div class="flex flex-wrap items-center gap-3">
+								{contactLinks.map(({ label, href, Icon }) => (
+									<a
+										href={href}
+										target={href.startsWith('http') ? '_blank' : undefined}
+										rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+										aria-label={label}
+										title={label}
+										class="inline-flex h-12 w-12 items-center justify-center rounded-md border border-white/15 bg-white/8 text-white transition hover:border-orange-400 hover:bg-orange-700"
+									>
+										<Icon size={21} aria-hidden="true" />
+									</a>
+								))}
+							</div>
+						</div>
+					</section>
+				</div>
+			</section>
+		</main>
+	</body>
+</html>

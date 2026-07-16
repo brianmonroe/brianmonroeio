@@ -1,0 +1,53 @@
+---
+import { SITE_TITLE } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+
+const navItems = [
+  { label: "Work", href: "/work" },
+  { label: "Services", href: "/services" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" }
+];
+---
+
+
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-neutral-200">
+	<div class="mx-auto max-w-7xl px-6">
+  
+	  <div class="flex items-center justify-between h-20">
+  
+		<a href="/" class="shrink-0 max-w-64">
+		  <img
+			src="/logo/brianmonroeio.webp"
+			alt="Brian Monroe"
+			class="max-w-64"
+		  />
+		</a>
+  
+		<div class="hidden md:flex items-center gap-8">
+  
+		  <nav class="flex items-center gap-8">
+			{navItems.map(item => (
+			  <a
+				href={item.href}
+				class="text-sm font-medium text-neutral-700 hover:text-black transition"
+			  >
+				{item.label}
+			  </a>
+			))}
+		  </nav>
+  
+		  <a
+			href="/free-audit"
+			class="nav-btn rounded-md bg-(--brand-orange) px-4 py-2 text-sm font-semibold text-white hover:bg-orange-800 transition"
+		  >
+			Free Audit
+		  </a>
+  
+		</div>
+  
+	  </div>
+  
+	</div>
+  </header>
+

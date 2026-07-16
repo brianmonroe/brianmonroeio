@@ -1,0 +1,52 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import FeatureCTA from '../../components/FeatureCTAOne.astro';
+import PageHero from "../../components/PageHero.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+
+import { getCollection } from "astro:content";
+import ProjectCard from "../../components/ProjectCard.astro";
+
+const projects = await getCollection("projects");
+
+console.log(projects);
+console.log(projects.length);
+---
+
+<BaseHead
+    title="Work | Brian Monroe"
+    description="Selected web development, SEO, photography, and marketing projects."
+/>
+
+<Header />
+
+<PageHero
+  eyebrow="Portfolio"
+  title="Selected Work"
+  description="From custom websites and technical SEO to photography and digital marketing, these projects represent a variety of businesses, nonprofits, organizations, and events I've had the opportunity to help grow online."
+/>
+
+<section class="py-24">
+
+    <div class="mx-auto max-w-7xl px-6">
+
+        <div class="grid gap-10 lg:grid-cols-2">
+
+            {
+                projects.map(project => (
+
+                    <ProjectCard project={project} />
+
+                ))
+            }
+
+        </div>
+
+    </div>
+
+</section>
+
+<FeatureCTA />
+<Footer />

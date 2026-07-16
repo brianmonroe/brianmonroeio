@@ -1,0 +1,57 @@
+---
+const { project } = Astro.props;
+
+const {
+  title,
+  excerpt,
+  featuredImage,
+  categories,
+} = project.data;
+---
+
+<article
+  class="group overflow-hidden rounded-xl border border-neutral-200 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+>
+
+  <img
+    src={featuredImage}
+    alt={title}
+    class="aspect-[16/10] w-full object-cover transition duration-500 group-hover:scale-105"
+  />
+
+  <div class="p-8">
+
+    <div class="flex flex-wrap gap-2">
+
+      {
+        categories.map(category => (
+
+          <span
+            class="rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700"
+          >
+            {category}
+          </span>
+
+        ))
+      }
+
+    </div>
+
+    <h2 class="card-h2 mt-5 text-2xl font-semibold">
+      {title}
+    </h2>
+
+    <p class="mt-4 text-neutral-600">
+      {excerpt}
+    </p>
+
+    <a
+      href={`/work/${project.id}`}
+      class="mt-6 inline-flex font-medium text-orange-700 transition hover:translate-x-1"
+    >
+      Project Breakdown →
+    </a>
+
+  </div>
+
+</article>
