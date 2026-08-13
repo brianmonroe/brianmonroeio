@@ -3,6 +3,8 @@ title: CelinaGlass.com Website Redesign
 
 client: Celina Glass Company
 
+type: website
+
 excerpt: A complete redesign focused on modern performance and showcasing the company's commercial work.
 
 featuredImage: https://placehold.co/600x400

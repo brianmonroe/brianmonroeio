@@ -1,83 +1,30 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { getCollection } from 'astro:content';
 import {
+	ArrowRight,
 	ArrowUpRight,
+	Braces,
 	Camera,
-	ChartNoAxesCombined,
-	Code2,
+	Linkedin,
 	Mail,
-	MonitorPlay,
-	Search,
-	Sparkles,
+	MapPin,
+	Megaphone,
+	MonitorSmartphone,
+	Send,
 } from 'lucide-astro';
+import BaseHead from '../components/BaseHead.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import PhotographyGallery from '../components/PhotographyGallery.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
-const services = [
-	{
-		title: 'Web Development & Optimization',
-		description:
-			'Custom websites, landing pages, ecommerce, accessibility improvements, and performance work for organizations that need a stronger digital home.',
-		Icon: Code2,
-	},
-	{
-		title: 'Search Engine Optimization',
-		description:
-			'Technical SEO, metadata strategy, site audits, local search improvements, and visibility planning built around practical next steps.',
-		Icon: Search,
-	},
-	{
-		title: 'Commercial & Event Photography',
-		description:
-			'Brand, product, event, and organization photography that gives websites, campaigns, and social channels stronger original visuals.',
-		Icon: Camera,
-	},
-	{
-		title: 'Social Media & Content Creation',
-		description:
-			'Content planning, graphics, photography, and marketing assets designed to keep your message clear, consistent, and useful.',
-		Icon: Sparkles,
-	},
-	{
-		title: 'Digital Display & Event Graphics',
-		description:
-			'Digital signage, event displays, sponsor presentations, TV slides, and branded visuals for live events and public spaces.',
-		Icon: MonitorPlay,
-	},
-	{
-		title: 'Analytics & Performance Tracking',
-		description:
-			'Website and social analytics, reporting, and performance tracking to understand what is working and where to improve.',
-		Icon: ChartNoAxesCombined,
-	},
-];
-
-const contactLinks = [
-	{
-		label: 'Email',
-		href: 'mailto:brian@brianmonroe.io',
-		Icon: Mail,
-	},
-	{
-		label: 'Web Project',
-		href: 'mailto:brian@brianmonroe.io?subject=Web%20Project%20Inquiry',
-		Icon: Code2,
-	},
-	{
-		label: 'SEO Audit',
-		href: 'mailto:brian@brianmonroe.io?subject=SEO%20Audit%20Inquiry',
-		Icon: Search,
-	},
-	{
-		label: 'Photography',
-		href: 'mailto:brian@brianmonroe.io?subject=Photography%20Inquiry',
-		Icon: Camera,
-	},
-	{
-		label: 'Event Graphics',
-		href: 'mailto:brian@brianmonroe.io?subject=Event%20Graphics%20Inquiry',
-		Icon: MonitorPlay,
-	},
-];
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const latestPost = posts[0];
+const projects = (await getCollection('projects')).sort(
+	(a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.year - a.data.year,
+);
+const featuredProject = projects.find((project) => project.data.featured) ?? projects[0];
 ---
 
 <!doctype html>
@@ -85,111 +32,313 @@ const contactLinks = [
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 	</head>
-	<body class="bg-neutral-950 text-neutral-950">
-		<main class="min-h-screen w-full max-w-none bg-[#f7f4ee] p-0">
-			<section class="relative isolate overflow-hidden">
-				<div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(200,90,22,0.18),transparent_34%),linear-gradient(135deg,#fffaf2_0%,#f3efe6_54%,#e9eced_100%)]"></div>
-				<div class="absolute inset-x-0 top-0 -z-10 h-28 border-b border-white/70 bg-white/35 backdrop-blur-sm"></div>
+	<body class="landing-page">
+		<div class="ambient ambient-one" aria-hidden="true"></div>
+		<div class="ambient ambient-two" aria-hidden="true"></div>
 
-				<div class="mx-auto flex min-h-screen max-w-7xl flex-col px-5 py-6 sm:px-6 lg:px-8">
-					<header class="flex items-center justify-between gap-5">
-						<a href="/" class="inline-flex items-center" aria-label="Brian Monroe home">
-							<img
-								src="/logo/brianmonroeio.webp"
-								alt="Brian Monroe"
-								class="h-12 w-auto rounded-none sm:h-14"
-							/>
-						</a>
+		<header class="site-header">
+			<div class="page-shell header-inner">
+				<a class="wordmark" href="/" aria-label="Brian Monroe, home">
+					<span class="wordmark-mark">BM</span>
+					<span>brianmonroe<span class="wordmark-dot">.io</span></span>
+				</a>
 
-						<a
-							href="mailto:brian@brianmonroe.io"
-							class="inline-flex items-center gap-2 rounded-md bg-neutral-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-800"
-						>
-							<Mail size={17} aria-hidden="true" />
-							<span>Start a Project</span>
-						</a>
-					</header>
+				<nav class="main-nav" aria-label="Main navigation">
+					<a href="/work">Work</a>
+					<a href="/blog">Random Thoughts</a>
+					<a href="/about">About</a>
+				</nav>
 
-					<div class="grid flex-1 items-center gap-12 py-16 lg:grid-cols-[1.02fr_0.98fr] lg:py-20">
-						<div>
-							<p class="text-sm font-bold uppercase tracking-[0.22em] text-orange-700">
-								Web Development / SEO / Photography / Digital Design
-							</p>
+				<a class="button button-small" href="#contact-form">
+					Let’s talk
+					<ArrowUpRight size={15} aria-hidden="true" />
+				</a>
+			</div>
+		</header>
 
-							<h1 class="mt-6 max-w-4xl text-5xl font-bold leading-[0.98] text-neutral-950 sm:text-6xl lg:text-7xl">
-								Helping businesses, organizations, and events show up better online.
-							</h1>
-
-							<p class="mt-7 max-w-2xl text-lg leading-8 text-neutral-700">
-								I build practical, polished digital experiences: fast websites, cleaner search visibility, original photography, social content, event graphics, and reporting that helps you make better decisions.
-							</p>
-
-							<div class="mt-9 flex flex-wrap items-center gap-3">
-								<a
-									href="mailto:brian@brianmonroe.io"
-									class="inline-flex items-center gap-2 rounded-md bg-orange-700 px-5 py-3 text-base font-semibold text-white transition hover:bg-orange-800"
-								>
-									<Mail size={19} aria-hidden="true" />
-									Email Me
-								</a>
-								<a
-									href="/work"
-									class="inline-flex items-center gap-2 rounded-md border border-neutral-300 bg-white/70 px-5 py-3 text-base font-semibold text-neutral-950 transition hover:border-neutral-500 hover:bg-white"
-								>
-									View Work
-									<ArrowUpRight size={18} aria-hidden="true" />
-								</a>
-							</div>
-						</div>
-
-						<div class="border border-neutral-200 bg-white/82 p-5 shadow-[0_24px_80px_rgba(15,18,25,0.13)] backdrop-blur rounded-lg">
-							<div class="grid gap-3 sm:grid-cols-2">
-								{services.map(({ title, description, Icon }) => (
-									<article class="rounded-lg border border-neutral-200 bg-white p-5">
-										<div class="flex h-10 w-10 items-center justify-center rounded-md bg-orange-50 text-orange-700">
-											<Icon size={21} aria-hidden="true" />
-										</div>
-										<h2 class="mt-4 text-xl font-bold leading-tight text-neutral-950">
-											{title}
-										</h2>
-										<p class="mt-3 text-sm leading-6 text-neutral-600">
-											{description}
-										</p>
-									</article>
-								))}
-							</div>
-						</div>
+		<main class="page-shell">
+			<section class="intro" aria-labelledby="intro-heading">
+				<div class="eyebrow"><span></span> Over 30 years living on the web</div>
+				<div class="hero-services">
+					<h1 id="intro-heading">
+						<span class="hero-service is-active" data-service="0">Marketing &amp; Strategy</span>
+						<span class="hero-service" data-service="1">Web Design &amp; Optimization</span>
+						<span class="hero-service" data-service="2">Photography &amp; Content Creation</span>
+					</h1>
+					<div class="hero-icon" aria-hidden="true">
+						<span class="service-icon is-active" data-icon="0"><Megaphone size={104} stroke-width={1.25} /></span>
+						<span class="service-icon" data-icon="1"><MonitorSmartphone size={104} stroke-width={1.25} /></span>
+						<span class="service-icon" data-icon="2"><Camera size={104} stroke-width={1.25} /></span>
 					</div>
-
-					<section class="mb-8 rounded-lg border border-neutral-200 bg-neutral-950 px-5 py-5 text-white shadow-[0_16px_45px_rgba(15,18,25,0.18)] sm:px-6">
-						<div class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-							<div>
-								<p class="text-xs font-bold uppercase tracking-[0.22em] text-orange-400">
-									Contact
-								</p>
-								<h2 class="mt-2 text-2xl font-bold text-white">
-									Ready to talk through a project?
-								</h2>
-							</div>
-
-							<div class="flex flex-wrap items-center gap-3">
-								{contactLinks.map(({ label, href, Icon }) => (
-									<a
-										href={href}
-										target={href.startsWith('http') ? '_blank' : undefined}
-										rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-										aria-label={label}
-										title={label}
-										class="inline-flex h-12 w-12 items-center justify-center rounded-md border border-white/15 bg-white/8 text-white transition hover:border-orange-400 hover:bg-orange-700"
-									>
-										<Icon size={21} aria-hidden="true" />
-									</a>
-								))}
-							</div>
-						</div>
-					</section>
+				</div>
+				<div class="availability">
+					<span class="status-dot"></span>
+					Available for select projects
+					<span class="availability-divider"></span>
+					<MapPin size={14} aria-hidden="true" />
+					Celina, Ohio
 				</div>
 			</section>
+
+			{
+				latestPost && (
+					<section class="section-block" aria-labelledby="writing-heading">
+						<div class="section-heading">
+							<p class="section-label">01 / Latest note</p>
+							<a href="/blog">All writing <ArrowRight size={14} aria-hidden="true" /></a>
+						</div>
+
+						<article class="glass-card latest-note">
+							<div class="note-meta">
+								<FormattedDate date={latestPost.data.pubDate} />
+								<span>•</span>
+								<span>3 min read</span>
+							</div>
+							<div class="note-copy">
+								<h2 id="writing-heading">{latestPost.data.title}</h2>
+								<p>{latestPost.data.description}</p>
+								<div class="preview-actions">
+									<a href={`/blog/${latestPost.id}`}>Read note <ArrowUpRight size={14} aria-hidden="true" /></a>
+									<a href="/blog">More Random Thoughts <ArrowRight size={14} aria-hidden="true" /></a>
+								</div>
+							</div>
+						</article>
+					</section>
+				)
+			}
+
+			{featuredProject && <section class="section-block" id="work" aria-labelledby="work-heading">
+				<div class="section-heading">
+					<p class="section-label">02 / Featured work</p>
+					<a href="/work">All projects <ArrowRight size={14} aria-hidden="true" /></a>
+				</div>
+
+				<article class="glass-card project-card">
+					<a class="project-thumb" href={`/work/${featuredProject.id}`} aria-label={`View ${featuredProject.data.title}`}>
+						<img src={featuredProject.data.featuredImage} alt="" loading="lazy" onerror="this.remove()" />
+						<span>{featuredProject.data.categories[0]}</span>
+					</a>
+					<div class="project-copy">
+						<div class="project-topline"><p>{featuredProject.data.client}</p><span>{featuredProject.data.year}</span></div>
+						<h2 id="work-heading">{featuredProject.data.title}</h2>
+						<p class="project-excerpt">{featuredProject.data.excerpt}</p>
+						<div class="project-tags">{featuredProject.data.categories.map((category) => <span>{category}</span>)}</div>
+						<div class="preview-actions">
+							{featuredProject.data.website && <a href={featuredProject.data.website} target="_blank" rel="noopener noreferrer">View website <ArrowUpRight size={14} aria-hidden="true" /></a>}
+							<a href="/work">See more projects <ArrowRight size={14} aria-hidden="true" /></a>
+						</div>
+					</div>
+				</article>
+			</section>}
+
+			<PhotographyGallery />
+
+			<section class="section-block contact-block" id="contact-form" aria-labelledby="contact-heading">
+				<div class="contact-intro">
+					<div class="contact-orb" aria-hidden="true"><Braces size={28} /></div>
+					<div class="contact-copy">
+						<p class="section-label">04 / Get in touch</p>
+						<h2 id="contact-heading">Have something in mind?</h2>
+						<p>Share a little about the project. This form is a placeholder for the embedded version coming later.</p>
+					</div>
+				</div>
+				<form class="contact-form" onsubmit="return false">
+					<div class="field-row">
+						<label>Name <input type="text" name="name" placeholder="Your name" /></label>
+						<label>Email <input type="email" name="email" placeholder="you@example.com" /></label>
+					</div>
+					<label>What are you working on?
+						<textarea name="message" rows="4" placeholder="A website, campaign, photo project…"></textarea>
+					</label>
+					<button class="button" type="submit"><Send size={16} aria-hidden="true" /> Send inquiry</button>
+				</form>
+			</section>
 		</main>
+
+		<footer class="site-footer">
+			<div class="page-shell footer-inner">
+				<p>© {new Date().getFullYear()} Brian Monroe</p>
+				<div class="footer-links">
+					<a href="https://linkedin.com" aria-label="LinkedIn"><Linkedin size={16} /> LinkedIn</a>
+					<a href="mailto:brian@brianmonroe.io"><Mail size={16} /> Email</a>
+				</div>
+				<a href="#">Back to top ↑</a>
+			</div>
+		</footer>
 	</body>
 </html>
+
+<style>
+	:global(html) { scroll-behavior: smooth; }
+	:global(body.landing-page) {
+		--ink: #f1f3ef;
+		--muted: #969b94;
+		--line: rgba(255, 255, 255, 0.1);
+		--orange: #e87338;
+		min-height: 100vh;
+		margin: 0;
+		overflow-x: hidden;
+		background: #0a0c0b;
+		color: var(--ink);
+		font-family: "Atkinson", ui-sans-serif, system-ui, sans-serif;
+		font-size: 16px;
+		line-height: 1.5;
+	}
+	:global(.landing-page *) { box-sizing: border-box; }
+	:global(.landing-page a) { color: inherit; text-decoration: none; }
+	.page-shell { width: min(100% - 40px, 1040px); margin-inline: auto; }
+	.ambient { position: fixed; z-index: -1; border-radius: 999px; filter: blur(1px); pointer-events: none; }
+	.ambient-one {
+		top: -280px; left: 50%; width: 690px; height: 690px;
+		background: radial-gradient(circle, rgba(46, 78, 63, .25), rgba(10, 12, 11, 0) 68%);
+	}
+	.ambient-two {
+		top: 40%; right: -410px; width: 720px; height: 720px;
+		background: radial-gradient(circle, rgba(173, 75, 35, .1), rgba(10, 12, 11, 0) 66%);
+	}
+	.site-header { position: relative; z-index: 10; border-bottom: 1px solid var(--line); }
+	.header-inner { height: 80px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+	.wordmark { display: inline-flex; align-items: center; gap: 11px; font-size: 18px; font-weight: 700; letter-spacing: -.025em; }
+	.wordmark-mark {
+		display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid rgba(255,255,255,.18);
+		border-radius: 50%; background: rgba(255,255,255,.055); font-size: 10px; letter-spacing: .04em;
+		box-shadow: inset 0 1px rgba(255,255,255,.08);
+	}
+	.wordmark-dot { color: var(--orange); }
+	.main-nav { display: flex; gap: 32px; color: #c0c5be; font-size: 15px; }
+	.main-nav a, .footer-links a, .site-footer > div > a { transition: color .2s ease; }
+	.main-nav a:hover, .footer-links a:hover, .site-footer > div > a:hover { color: white; }
+	.button {
+		display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 46px;
+		padding: 0 18px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px;
+		background: rgba(255,255,255,.09); color: white; font-size: 14px; font-weight: 700;
+		box-shadow: inset 0 1px rgba(255,255,255,.1), 0 10px 30px rgba(0,0,0,.18);
+		backdrop-filter: blur(16px); transition: border-color .2s, background .2s, transform .2s;
+	}
+	.button:hover { transform: translateY(-2px); border-color: rgba(232,115,56,.55); background: rgba(232,115,56,.13); }
+	.button-small { min-height: 40px; padding: 0 16px; font-size: 14px; }
+	.intro { padding: 118px 0 104px; border-bottom: 1px solid var(--line); }
+	.eyebrow, .section-label {
+		margin: 0; color: #a8ada6; font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+	}
+	.eyebrow { display: flex; align-items: center; gap: 10px; }
+	.eyebrow span { width: 20px; height: 1px; background: var(--orange); }
+	.hero-services { display: grid; grid-template-columns: minmax(0, 1fr) 190px; align-items: center; gap: 54px; margin-top: 28px; }
+	.intro h1 { display: grid; gap: 4px; min-width: 0; margin: 0; font-size: clamp(2rem, 4.4vw, 3.35rem); line-height: 1.08; letter-spacing: -.045em; font-weight: 500; }
+	.hero-service { position: relative; z-index: 0; width: max-content; max-width: 100%; padding: 3px 8px 5px; color: #676c67; transition: color .55s ease; }
+	.hero-service::before { content: ""; position: absolute; z-index: -1; inset: 1px 0; border-radius: 5px; background: linear-gradient(90deg, rgba(232,115,56,.22), rgba(232,115,56,.06)); transform: scaleX(0); transform-origin: left; transition: transform .65s cubic-bezier(.22, 1, .36, 1); }
+	.hero-service.is-active { color: #f1f3ef; }
+	.hero-service.is-active::before { transform: scaleX(1); }
+	.hero-icon { position: relative; display: grid; width: 190px; height: 190px; place-items: center; border: 1px solid rgba(255,255,255,.1); border-radius: 50%; color: var(--orange); background: radial-gradient(circle at 35% 30%, rgba(232,115,56,.15), rgba(255,255,255,.025) 62%); box-shadow: inset 0 1px rgba(255,255,255,.08), 0 22px 60px rgba(0,0,0,.2); }
+	.service-icon { position: absolute; display: grid; place-items: center; opacity: 0; transform: scale(.78) rotate(-7deg); transition: opacity .45s ease, transform .65s cubic-bezier(.22, 1, .36, 1); }
+	.service-icon.is-active { opacity: 1; transform: scale(1) rotate(0); }
+	.intro > p { max-width: 690px; margin: 0; color: var(--muted); font-size: 20px; line-height: 1.65; }
+	.availability { display: flex; align-items: center; gap: 8px; margin-top: 32px; color: #858b84; font-size: 14px; }
+	.status-dot { width: 6px; height: 6px; border-radius: 50%; background: #6bc18c; box-shadow: 0 0 0 4px rgba(107,193,140,.09); }
+	.availability-divider { width: 1px; height: 13px; margin: 0 5px; background: var(--line); }
+	.section-block { padding: 76px 0; border-bottom: 1px solid var(--line); }
+	.section-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 22px; }
+	.section-heading > a { display: inline-flex; align-items: center; gap: 7px; color: #9ca19a; font-size: 13px; }
+	.section-aside { margin: 0; color: #70756f; font-size: 13px; }
+	.glass-card {
+		position: relative; border: 1px solid rgba(255,255,255,.105); border-radius: 18px;
+		background: linear-gradient(120deg, rgba(255,255,255,.065), rgba(255,255,255,.025));
+		box-shadow: inset 0 1px rgba(255,255,255,.055), 0 18px 55px rgba(0,0,0,.16);
+		backdrop-filter: blur(18px);
+	}
+	.latest-note { display: grid; grid-template-columns: 150px 1fr; align-items: start; gap: 24px; padding: 28px 30px; transition: border-color .2s, transform .2s; }
+	.latest-note:hover { transform: translateY(-2px); border-color: rgba(232,115,56,.35); }
+	.note-meta { display: flex; flex-wrap: wrap; gap: 7px; color: #858b84; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+	.note-copy h2, .project-copy h2, .contact-copy h2 { margin: 0; font-weight: 500; letter-spacing: -.025em; }
+	.note-copy h2 { font-size: 24px; }
+	.note-copy p { margin: 6px 0 0; color: var(--muted); font-size: 16px; }
+	.round-link {
+		display: grid; width: 40px; height: 40px; place-items: center; justify-self: end;
+		border: 1px solid rgba(255,255,255,.11); border-radius: 50%; color: #c9cdc7; background: rgba(255,255,255,.035);
+	}
+	.project-card { display: grid; grid-template-columns: 260px 1fr; align-items: start; gap: 30px; padding: 28px; }
+	.project-thumb { position: relative; align-self: start; height: 190px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); border-radius: 13px; background: radial-gradient(circle at 30% 20%, rgba(232,115,56,.38), transparent 35%), linear-gradient(145deg, #25342c, #111513); }
+	.project-thumb img { width: 100%; height: 100%; min-height: 190px; object-fit: cover; opacity: .78; filter: saturate(.7) contrast(1.04); transition: transform .35s, opacity .35s; }
+	.project-thumb:hover img { transform: scale(1.035); opacity: .9; }
+	.project-thumb span { position: absolute; left: 12px; bottom: 12px; padding: 5px 8px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; background: rgba(10,12,11,.68); color: #e1e4df; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; backdrop-filter: blur(8px); }
+	.project-topline { display: flex; justify-content: space-between; gap: 20px; color: #858b84; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+	.project-topline p { margin: 0; }
+	.project-copy h2 { margin-top: 9px; font-size: 26px; }
+	.project-excerpt { max-width: 670px; margin: 10px 0 0; color: var(--muted); font-size: 16px; line-height: 1.65; }
+	.project-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+	.project-tags span { padding: 5px 9px; border: 1px solid rgba(255,255,255,.09); border-radius: 999px; color: #9ca29a; font-size: 11px; text-transform: uppercase; letter-spacing: .07em; }
+	.preview-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 20px; }
+	.preview-actions a { display: inline-flex; align-items: center; gap: 7px; color: #c7cbc5; font-size: 13px; font-weight: 700; transition: color .2s; }
+	.preview-actions a:first-child { color: #ed8a58; }
+	.preview-actions a:hover { color: white; }
+	.project-link { margin-top: 1px; }
+	.contact-block {
+		display: grid; grid-template-columns: .8fr 1.2fr; align-items: start; gap: 54px;
+		margin: 76px 0; padding: 44px; border: 1px solid rgba(255,255,255,.11); border-radius: 22px;
+		background: radial-gradient(circle at 5% 0%, rgba(232,115,56,.1), transparent 35%), rgba(255,255,255,.03);
+		box-shadow: inset 0 1px rgba(255,255,255,.06);
+	}
+	.contact-intro { display: grid; gap: 24px; }
+	.contact-orb { display: grid; width: 66px; height: 66px; place-items: center; border: 1px solid rgba(232,115,56,.28); border-radius: 50%; color: var(--orange); background: rgba(232,115,56,.07); }
+	.contact-copy h2 { margin-top: 10px; font-size: 31px; }
+	.contact-copy > p:last-child { max-width: 480px; margin: 9px 0 0; color: var(--muted); font-size: 16px; }
+	.contact-form, .contact-form label { display: grid; gap: 8px; }
+	.contact-form { gap: 17px; }
+	.contact-form label { color: #b9beb7; font-size: 13px; font-weight: 700; }
+	.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+	.contact-form input, .contact-form textarea { width: 100%; border: 1px solid rgba(255,255,255,.11); border-radius: 11px; outline: none; background: rgba(0,0,0,.2); color: white; font: inherit; font-weight: 400; padding: 12px 14px; transition: border-color .2s, box-shadow .2s; }
+	.contact-form input:focus, .contact-form textarea:focus { border-color: rgba(232,115,56,.65); box-shadow: 0 0 0 3px rgba(232,115,56,.08); }
+	.contact-form textarea { resize: vertical; }
+	.contact-form .button { justify-self: start; border: 0; cursor: pointer; }
+	.site-footer { border-top: 1px solid var(--line); color: #656a64; font-size: 12px; }
+	.footer-inner { min-height: 112px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+	.footer-inner p { margin: 0; }
+	.footer-links { display: flex; gap: 20px; }
+	.footer-links a { display: inline-flex; align-items: center; gap: 6px; }
+	@media (max-width: 700px) {
+		.page-shell { width: min(100% - 28px, 1040px); }
+		.wordmark-mark { width: 32px; height: 32px; }
+		.header-inner { height: 68px; }
+		.main-nav { display: none; }
+		.wordmark { font-size: 15px; }
+		.button-small { min-height: 36px; }
+		.intro { padding: 82px 0 74px; }
+		.hero-services { grid-template-columns: minmax(0, 1fr) 92px; gap: 18px; }
+		.intro h1 { font-size: clamp(1.55rem, 6vw, 2.45rem); }
+		.hero-service { width: auto; padding-inline: 5px; }
+		.hero-icon { width: 88px; height: 88px; }
+		.service-icon :global(svg) { width: 48px; height: 48px; }
+		.intro > p { font-size: 16px; }
+		.availability { flex-wrap: wrap; }
+		.section-block { padding: 58px 0; }
+		.section-aside { display: none; }
+		.latest-note { grid-template-columns: 1fr; padding: 23px; }
+		.note-meta { grid-column: 1 / -1; }
+		.note-copy p { padding-right: 10px; }
+		.project-card { grid-template-columns: 1fr; padding: 24px; gap: 20px; }
+		.project-thumb { grid-column: 1 / -1; height: 210px; }
+		.project-thumb img { min-height: 210px; }
+		.contact-block { grid-template-columns: 1fr; gap: 22px; margin: 58px 0; padding: 28px; }
+		.contact-orb { width: 56px; height: 56px; }
+		.contact-block .button { justify-self: start; }
+		.field-row { grid-template-columns: 1fr; }
+		.footer-inner { min-height: 140px; flex-wrap: wrap; padding: 28px 0; }
+	}
+</style>
+
+<script>
+	const serviceLines = Array.from(document.querySelectorAll<HTMLElement>('.hero-service'));
+	const serviceIcons = Array.from(document.querySelectorAll<HTMLElement>('.service-icon'));
+	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+	let activeService = 0;
+
+	function activateService(index: number) {
+		activeService = index;
+		serviceLines.forEach((line, lineIndex) => line.classList.toggle('is-active', lineIndex === index));
+		serviceIcons.forEach((icon, iconIndex) => icon.classList.toggle('is-active', iconIndex === index));
+	}
+
+	if (!reduceMotion.matches && serviceLines.length > 1) {
+		window.setInterval(() => activateService((activeService + 1) % serviceLines.length), 3200);
+	}
+</script>

@@ -1,0 +1,155 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowUpRight, ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-astro';
+import brownscampTwo from '../assets/photogallery/20170817_brownscamp-2.webp';
+import brownscampFive from '../assets/photogallery/20170817_brownscamp-5.webp';
+import brownscampEight from '../assets/photogallery/20170817_brownscamp-8.webp';
+import seniorOwen from '../assets/photogallery/2026-senior-owen-109.jpg';
+import flagDay from '../assets/photogallery/celina-moose-flag-day-2026-5.avif';
+import moosestock from '../assets/photogallery/celina-moose-moosestock-2025-115-66.jpg';
+import chadCoin from '../assets/photogallery/chad-coin.jpg';
+import derby from '../assets/photogallery/derby_02.jpg';
+
+const photography = [
+	{ src: seniorOwen, alt: 'Outdoor senior portrait' },
+	{ src: brownscampTwo, alt: 'Brownscamp photography session' },
+	{ src: flagDay, alt: 'Celina Moose Flag Day event' },
+	{ src: moosestock, alt: 'Live performance at Celina Moose Moosestock' },
+	{ src: brownscampFive, alt: 'Candid moment from a Brownscamp photography session' },
+	{ src: chadCoin, alt: 'Commercial product photography of a commemorative coin' },
+	{ src: derby, alt: 'Derby event photography' },
+	{ src: brownscampEight, alt: 'Brownscamp event photography' },
+];
+---
+
+<section class="photography-block" id="photography" aria-labelledby="photography-heading">
+	<div class="section-heading">
+		<p class="section-label">03 / Photography</p>
+	</div>
+
+	<div class="photography-intro">
+		<div>
+			<p class="photography-kicker">Commercial · Events · Editorial</p>
+			<h2 id="photography-heading">People, places, and the moments between.</h2>
+		</div>
+		<div>
+			<p>Natural, purposeful imagery for brands, organizations, events, and the people behind them.</p>
+			<a href="/work">See more work <ArrowUpRight size={15} aria-hidden="true" /></a>
+		</div>
+	</div>
+
+	<div class="photo-grid">
+		{photography.map((photo, index) => (
+			<figure class="photo-tile">
+				<button class="photo-open" type="button" data-photo-index={index} aria-label={`Enlarge: ${photo.alt}`}>
+					<Image src={photo.src} alt={photo.alt} widths={[360, 640, 960]} sizes="(max-width: 560px) 100vw, (max-width: 800px) 50vw, 33vw" loading="lazy" />
+					<span class="photo-expand" aria-hidden="true"><Maximize2 size={16} /></span>
+				</button>
+			</figure>
+		))}
+	</div>
+</section>
+
+<dialog class="photo-lightbox" aria-label="Photography gallery viewer">
+	<div class="lightbox-frame">
+		<button class="lightbox-close" type="button" aria-label="Close photo viewer"><X size={22} /></button>
+		<button class="lightbox-nav lightbox-prev" type="button" aria-label="Previous photo"><ChevronLeft size={28} /></button>
+		<div class="lightbox-image-wrap">
+			<img class="lightbox-image" src="" alt="" />
+			<div class="lightbox-meta">
+				<p class="lightbox-caption"></p>
+				<p class="lightbox-count" aria-live="polite"></p>
+			</div>
+		</div>
+		<button class="lightbox-nav lightbox-next" type="button" aria-label="Next photo"><ChevronRight size={28} /></button>
+	</div>
+</dialog>
+
+<style>
+	.photography-block { padding: 76px 0; border-bottom: 1px solid var(--line); }
+	.section-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 22px; }
+	.section-label { margin: 0; color: #a8ada6; font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+	.photography-intro { display: grid; grid-template-columns: 1.15fr .85fr; align-items: end; gap: 60px; margin: 42px 0 32px; }
+	.photography-kicker { margin: 0 0 14px; color: #d88960; font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+	.photography-intro h2 { max-width: 560px; margin: 0; font-size: clamp(2rem, 4.6vw, 3.5rem); font-weight: 500; line-height: 1.04; letter-spacing: -.04em; }
+	.photography-intro > div:last-child > p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
+	.photography-intro a { display: inline-flex; align-items: center; gap: 7px; margin-top: 18px; color: #d1d5cf; font-size: 13px; font-weight: 700; }
+	.photo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-flow: dense; grid-auto-rows: 1px; gap: 12px; }
+	.photo-tile { grid-row: span 19; margin: 0; overflow: hidden; border-radius: 13px; background: #151917; }
+	.photo-tile:nth-child(3n + 1) { grid-row: span 25; }
+	.photo-tile:nth-child(4n) { grid-row: span 16; }
+	.photo-tile :global(img) { width: 100%; height: 100%; object-fit: cover; filter: saturate(.85) contrast(1.03); transition: transform .45s ease, filter .45s ease; }
+	.photo-tile:hover :global(img) { transform: scale(1.025); filter: saturate(1) contrast(1.02); }
+	@media (max-width: 700px) {
+		.photography-block { padding: 58px 0; }
+		.photography-intro { grid-template-columns: 1fr; gap: 20px; margin-top: 30px; }
+		.photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	}
+	@media (max-width: 480px) {
+		.photo-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+		.photo-tile, .photo-tile:nth-child(3n + 1), .photo-tile:nth-child(4n) { grid-row: auto; aspect-ratio: 4 / 3; }
+	}
+</style>
+
+<style is:global>
+	.photo-open { position: relative; display: block; width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; border: 0; background: none; color: white; cursor: zoom-in; }
+	.photo-open:focus-visible { outline: 2px solid #e87338; outline-offset: -4px; }
+	.photo-expand { position: absolute; right: 12px; bottom: 12px; display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; background: rgba(8,10,9,.62); color: white; opacity: 0; backdrop-filter: blur(8px); transition: opacity .2s, transform .2s; transform: translateY(5px); }
+	.photo-open:hover .photo-expand, .photo-open:focus-visible .photo-expand { opacity: 1; transform: translateY(0); }
+	body:has(.photo-lightbox[open]) { overflow: hidden; }
+	.photo-lightbox { inset: 0; width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(4,5,5,.96); color: white; }
+	.photo-lightbox::backdrop { background: rgba(4,5,5,.96); backdrop-filter: blur(12px); }
+	.photo-lightbox .lightbox-frame { position: relative; display: grid; grid-template-columns: 72px minmax(0, 1fr) 72px; align-items: center; width: 100%; height: 100%; padding: 42px 24px 24px; }
+	.photo-lightbox .lightbox-image-wrap { display: flex; min-width: 0; height: 100%; flex-direction: column; align-items: center; justify-content: center; }
+	.photo-lightbox .lightbox-image { display: block; width: auto; max-width: 100%; height: auto; max-height: calc(100dvh - 112px); object-fit: contain; border-radius: 6px; box-shadow: 0 24px 80px rgba(0,0,0,.5); }
+	.photo-lightbox .lightbox-meta { display: flex; width: min(100%, 1100px); justify-content: space-between; gap: 20px; margin-top: 12px; color: #aeb3ac; font: 12px/1.4 "Atkinson", sans-serif; }
+	.photo-lightbox .lightbox-meta p { margin: 0; }
+	.photo-lightbox .lightbox-count { flex: none; }
+	.photo-lightbox .lightbox-close, .photo-lightbox .lightbox-nav { display: grid; place-items: center; flex: none; padding: 0; border: 1px solid rgba(255,255,255,.16); border-radius: 50%; background: rgba(255,255,255,.07); color: white; cursor: pointer; transition: background .2s, border-color .2s; }
+	.photo-lightbox .lightbox-close:hover, .photo-lightbox .lightbox-nav:hover { border-color: rgba(232,115,56,.6); background: rgba(232,115,56,.15); }
+	.photo-lightbox .lightbox-close { position: absolute; z-index: 2; top: 18px; right: 20px; width: 42px; height: 42px; }
+	.photo-lightbox .lightbox-nav { width: 48px; height: 48px; justify-self: center; }
+	@media (max-width: 700px) {
+		.photo-lightbox .lightbox-frame { grid-template-columns: 52px minmax(0, 1fr) 52px; padding-inline: 6px; }
+		.photo-lightbox .lightbox-nav { width: 42px; height: 42px; }
+		.photo-lightbox .lightbox-caption { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+	}
+</style>
+
+<script>
+	const lightbox = document.querySelector<HTMLDialogElement>('.photo-lightbox');
+	const photoButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.photo-open'));
+	const lightboxImage = lightbox?.querySelector<HTMLImageElement>('.lightbox-image');
+	const caption = lightbox?.querySelector<HTMLElement>('.lightbox-caption');
+	const count = lightbox?.querySelector<HTMLElement>('.lightbox-count');
+	let activePhoto = 0;
+
+	function showPhoto(index: number) {
+		if (!lightboxImage || !caption || !count || photoButtons.length === 0) return;
+		activePhoto = (index + photoButtons.length) % photoButtons.length;
+		const source = photoButtons[activePhoto].querySelector<HTMLImageElement>('img');
+		if (!source) return;
+		lightboxImage.src = source.currentSrc || source.src;
+		lightboxImage.alt = source.alt;
+		caption.textContent = source.alt;
+		count.textContent = `${activePhoto + 1} / ${photoButtons.length}`;
+	}
+
+	photoButtons.forEach((button, index) => {
+		button.addEventListener('click', () => {
+			showPhoto(index);
+			lightbox?.showModal();
+		});
+	});
+
+	lightbox?.querySelector('.lightbox-prev')?.addEventListener('click', () => showPhoto(activePhoto - 1));
+	lightbox?.querySelector('.lightbox-next')?.addEventListener('click', () => showPhoto(activePhoto + 1));
+	lightbox?.querySelector('.lightbox-close')?.addEventListener('click', () => lightbox.close());
+	lightbox?.addEventListener('click', (event) => {
+		if (event.target === lightbox) lightbox.close();
+	});
+	lightbox?.addEventListener('keydown', (event) => {
+		if (event.key === 'ArrowLeft') showPhoto(activePhoto - 1);
+		if (event.key === 'ArrowRight') showPhoto(activePhoto + 1);
+	});
+</script>

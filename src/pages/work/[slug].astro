@@ -1,57 +1,151 @@
 ---
-import { getCollection, render } from "astro:content";
-
-import BaseHead from "../../components/BaseHead.astro";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-
-import ProjectHero from "../../components/ProjectHero.astro";
+import { getCollection, render } from 'astro:content';
+import { ArrowUpRight, Check, ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-astro';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
 
 export async function getStaticPaths() {
-
-    const projects = await getCollection("projects");
-
-    return projects.map(project => ({
-
-        params: {
-
-            slug: project.id
-
-        },
-
-        props: {
-
-            project
-
-        }
-
-    }));
-
+	const projects = await getCollection('projects');
+	return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
 }
 
 const { project } = Astro.props;
-
 const { Content } = await render(project);
-
+const isPhotography = project.data.categories.includes('Photography');
 ---
 
-<BaseHead
-    title={project.data.title}
-    description={project.data.excerpt}
-/>
+<!doctype html>
+<html lang="en">
+	<head><BaseHead title={project.data.title} description={project.data.excerpt} /></head>
+	<body class="site-page">
+		<Header />
+		<main>
+			<section class="project-hero">
+				<div class="site-shell project-hero-grid">
+					<div>
+						<p class="page-eyebrow">{project.data.client} · {project.data.year}</p>
+						<h1>{project.data.title}</h1>
+						<p class="project-lead">{project.data.excerpt}</p>
+						<div class="hero-tags">{project.data.categories.map((item) => <span>{item}</span>)}</div>
+						{project.data.website && <a class="site-button" href={project.data.website} target="_blank" rel="noopener noreferrer">Visit website <ArrowUpRight size={17} /></a>}
+					</div>
+					<div class="project-visual glass-panel">
+						<img src={project.data.featuredImage} alt="" onerror="this.remove()" />
+					</div>
+				</div>
+			</section>
+			<section class="project-info site-shell">
+				<div class="prose-dark"><Content /></div>
+				<aside class="glass-panel project-aside">
+					<div>
+						<p class="aside-label">Services</p>
+						<ul>{project.data.services.map((item) => <li><Check size={14} /> {item}</li>)}</ul>
+					</div>
+					{project.data.technologies.length > 0 && <div>
+						<p class="aside-label">Technology</p>
+						<p>{project.data.technologies.join(' · ')}</p>
+					</div>}
+				</aside>
+			</section>
+			{isPhotography && project.data.gallery.length > 0 && (
+				<section class="project-gallery site-shell" aria-labelledby="gallery-heading">
+					<div class="gallery-heading"><p>Selected images</p><h2 id="gallery-heading">The full set</h2></div>
+					<div class="gallery-grid">
+						{project.data.gallery.map((image, index) => (
+							<button class="detail-photo-open" type="button" data-photo-index={index} aria-label={`Enlarge photo ${index + 1}`}>
+								<img src={image} alt={`${project.data.title}, photo ${index + 1}`} loading="lazy" />
+								<span aria-hidden="true"><Maximize2 size={16} /></span>
+							</button>
+						))}
+					</div>
+				</section>
+			)}
+			<dialog class="detail-lightbox" aria-label={`${project.data.title} photo viewer`}>
+				<div class="detail-lightbox-frame">
+					<button class="detail-lightbox-close" type="button" aria-label="Close viewer"><X size={22} /></button>
+					<button class="detail-lightbox-nav detail-lightbox-prev" type="button" aria-label="Previous photo"><ChevronLeft size={28} /></button>
+					<div class="detail-lightbox-content"><img class="detail-lightbox-image" src="" alt="" /><p class="detail-lightbox-count" aria-live="polite"></p></div>
+					<button class="detail-lightbox-nav detail-lightbox-next" type="button" aria-label="Next photo"><ChevronRight size={28} /></button>
+				</div>
+			</dialog>
+		</main>
+		<Footer />
+	</body>
+</html>
 
-<Header />
+<style>
+	.project-hero { padding: 92px 0 76px; border-bottom: 1px solid rgba(255,255,255,.1); }
+	.project-hero-grid { display: grid; grid-template-columns: 1fr .85fr; gap: 66px; align-items: center; }
+	.project-hero h1 { max-width: 660px; margin: 0; font-size: clamp(2.7rem, 6vw, 4.5rem); font-weight: 500; line-height: 1.04; letter-spacing: -.05em; }
+	.project-lead { max-width: 620px; margin: 22px 0 0; color: #a4aaa2; font-size: 20px; }
+	.hero-tags { display: flex; gap: 8px; margin: 24px 0; }
+	.hero-tags span { padding: 6px 10px; border: 1px solid rgba(255,255,255,.1); border-radius: 999px; color: #929890; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+	.project-visual { min-height: 390px; overflow: hidden; background: linear-gradient(145deg, #314638, #111513); }
+	.project-visual img { width: 100%; height: 390px; object-fit: cover; opacity: .82; filter: saturate(.72); }
+	.project-info { display: grid; grid-template-columns: 1fr 300px; gap: 80px; align-items: start; padding-top: 80px; padding-bottom: 110px; }
+	.prose-dark { margin: 0; width: 100%; }
+	.project-aside { position: sticky; top: 24px; display: grid; gap: 27px; padding: 26px; color: #949a93; font-size: 14px; }
+	.aside-label { margin: 0 0 12px; color: #d6d9d4; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+	.project-aside ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+	.project-aside li { display: flex; align-items: center; gap: 7px; }
+	.project-aside svg { color: #e87338; }
+	.project-aside p:last-child { margin: 0; }
+	.project-gallery { padding-bottom: 110px; }
+	.gallery-heading { margin-bottom: 28px; }
+	.gallery-heading p { margin: 0 0 8px; color: #d88960; font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+	.gallery-heading h2 { margin: 0; color: #eef0ec; font-size: 34px; font-weight: 500; letter-spacing: -.03em; }
+	.gallery-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+	.detail-photo-open { position: relative; aspect-ratio: 3 / 2; padding: 0; overflow: hidden; border: 0; border-radius: 14px; background: #111513; color: white; cursor: zoom-in; }
+	.detail-photo-open:nth-child(3n + 1) { grid-column: 1 / -1; aspect-ratio: 2 / 1; }
+	.detail-photo-open img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.85); transition: transform .4s, filter .4s; }
+	.detail-photo-open:hover img { transform: scale(1.025); filter: saturate(1); }
+	.detail-photo-open span { position: absolute; right: 12px; bottom: 12px; display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; background: rgba(8,10,9,.62); opacity: 0; transition: opacity .2s; }
+	.detail-photo-open:hover span, .detail-photo-open:focus-visible span { opacity: 1; }
+	.detail-lightbox { inset: 0; width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(4,5,5,.96); color: white; }
+	.detail-lightbox::backdrop { background: rgba(4,5,5,.96); backdrop-filter: blur(12px); }
+	.detail-lightbox-frame { position: relative; display: grid; grid-template-columns: 72px minmax(0,1fr) 72px; align-items: center; width: 100%; height: 100%; padding: 42px 24px 24px; }
+	.detail-lightbox-content { display: flex; min-width: 0; height: 100%; flex-direction: column; align-items: center; justify-content: center; }
+	.detail-lightbox-image { width: auto; max-width: 100%; height: auto; max-height: calc(100dvh - 105px); object-fit: contain; border-radius: 6px; }
+	.detail-lightbox-count { margin: 12px 0 0; color: #aeb3ac; font-size: 12px; }
+	.detail-lightbox-close, .detail-lightbox-nav { display: grid; place-items: center; padding: 0; border: 1px solid rgba(255,255,255,.16); border-radius: 50%; background: rgba(255,255,255,.07); color: white; cursor: pointer; }
+	.detail-lightbox-close { position: absolute; z-index: 2; top: 18px; right: 20px; width: 42px; height: 42px; }
+	.detail-lightbox-nav { width: 48px; height: 48px; justify-self: center; }
+	:global(body:has(.detail-lightbox[open])) { overflow: hidden; }
+	@media(max-width: 800px) {
+		.project-hero-grid, .project-info { grid-template-columns: 1fr; }
+		.project-hero-grid { gap: 42px; }
+		.project-info { gap: 50px; }
+		.project-visual, .project-visual img { min-height: 260px; height: 260px; }
+		.project-aside { position: static; }
+		.gallery-grid { grid-template-columns: 1fr; }
+		.detail-photo-open:nth-child(3n + 1) { grid-column: auto; aspect-ratio: 3 / 2; }
+		.detail-lightbox-frame { grid-template-columns: 52px minmax(0,1fr) 52px; padding-inline: 6px; }
+	}
+</style>
 
-<ProjectHero project={project} />
-
-<section class="py-20">
-
-    <div class="mx-auto max-w-4xl px-6 prose prose-lg">
-
-        <Content />
-
-    </div>
-
-</section>
-
-<Footer />
+<script>
+	const detailLightbox = document.querySelector<HTMLDialogElement>('.detail-lightbox');
+	const detailButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.detail-photo-open'));
+	const detailImage = detailLightbox?.querySelector<HTMLImageElement>('.detail-lightbox-image');
+	const detailCount = detailLightbox?.querySelector<HTMLElement>('.detail-lightbox-count');
+	let activeDetailPhoto = 0;
+	function showDetailPhoto(index: number) {
+		if (!detailImage || !detailCount || detailButtons.length === 0) return;
+		activeDetailPhoto = (index + detailButtons.length) % detailButtons.length;
+		const source = detailButtons[activeDetailPhoto].querySelector<HTMLImageElement>('img');
+		if (!source) return;
+		detailImage.src = source.currentSrc || source.src;
+		detailImage.alt = source.alt;
+		detailCount.textContent = `${activeDetailPhoto + 1} / ${detailButtons.length}`;
+	}
+	detailButtons.forEach((button, index) => button.addEventListener('click', () => { showDetailPhoto(index); detailLightbox?.showModal(); }));
+	detailLightbox?.querySelector('.detail-lightbox-prev')?.addEventListener('click', () => showDetailPhoto(activeDetailPhoto - 1));
+	detailLightbox?.querySelector('.detail-lightbox-next')?.addEventListener('click', () => showDetailPhoto(activeDetailPhoto + 1));
+	detailLightbox?.querySelector('.detail-lightbox-close')?.addEventListener('click', () => detailLightbox.close());
+	detailLightbox?.addEventListener('click', (event) => { if (event.target === detailLightbox) detailLightbox.close(); });
+	detailLightbox?.addEventListener('keydown', (event) => {
+		if (event.key === 'ArrowLeft') showDetailPhoto(activeDetailPhoto - 1);
+		if (event.key === 'ArrowRight') showDetailPhoto(activeDetailPhoto + 1);
+	});
+</script>

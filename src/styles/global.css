@@ -4,7 +4,23 @@
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
 
- @import "tailwindcss";
+@import "tailwindcss";
+
+@font-face {
+	font-family: "Atkinson";
+	src: url("../assets/fonts/atkinson-regular.woff") format("woff");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Atkinson";
+	src: url("../assets/fonts/atkinson-bold.woff") format("woff");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
 
 :root {
 	--accent: #c85a16;
@@ -31,4 +47,79 @@ body {
 	color: rgb(var(--gray-dark));
 	font-size: 20px;
 	line-height: 1.7;
+}
+
+body.site-page {
+	--ink: #f1f3ef;
+	--muted: #a4aaa2;
+	--line: rgba(255, 255, 255, 0.1);
+	--orange: #e87338;
+	min-height: 100vh;
+	margin: 0;
+	background:
+		radial-gradient(circle at 72% -10%, rgba(46, 78, 63, .22), transparent 34rem),
+		#0a0c0b;
+	color: var(--ink);
+	font-family: "Atkinson", ui-sans-serif, system-ui, sans-serif;
+	font-size: 18px;
+	line-height: 1.6;
+}
+
+.site-page *, .site-header *, .site-footer * { box-sizing: border-box; }
+.site-page a, .site-header a, .site-footer a { color: inherit; text-decoration: none; }
+.site-shell { width: min(100% - 40px, 1040px); margin-inline: auto; }
+.site-header { position: relative; z-index: 10; border-bottom: 1px solid rgba(255,255,255,.1); background: rgba(10,12,11,.76); backdrop-filter: blur(18px); }
+.header-inner { height: 80px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.wordmark { display: inline-flex; align-items: center; gap: 11px; font-size: 18px; font-weight: 700; letter-spacing: -.025em; }
+.wordmark-mark { display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; background: rgba(255,255,255,.055); font-size: 10px; letter-spacing: .04em; }
+.wordmark-dot { color: #e87338; }
+.main-nav { display: flex; gap: 32px; color: #c0c5be; font-size: 15px; }
+.main-nav a, .footer-links a, .footer-inner > a { transition: color .2s; }
+.main-nav a:hover, .footer-links a:hover, .footer-inner > a:hover { color: white; }
+.site-button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 0 20px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; background: rgba(255,255,255,.09); color: white; font-size: 15px; font-weight: 700; box-shadow: inset 0 1px rgba(255,255,255,.1); transition: border-color .2s, background .2s, transform .2s; }
+.site-button:hover { transform: translateY(-2px); border-color: rgba(232,115,56,.55); background: rgba(232,115,56,.13); }
+.site-button-small { min-height: 40px; padding: 0 16px; font-size: 14px; }
+.site-footer { border-top: 1px solid rgba(255,255,255,.1); background: #0a0c0b; color: #777d76; font: 14px/1.5 "Atkinson", sans-serif; }
+.footer-inner { min-height: 112px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.footer-inner p { margin: 0; }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { display: inline-flex; align-items: center; gap: 7px; }
+.page-hero { padding: 104px 0 72px; border-bottom: 1px solid rgba(255,255,255,.1); }
+.page-eyebrow { margin: 0 0 20px; color: #a8ada6; font-size: 13px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; }
+.page-hero h1 { max-width: 800px; margin: 0; color: #f1f3ef; font-size: clamp(2.6rem, 6vw, 4.6rem); font-weight: 500; line-height: 1.04; letter-spacing: -.045em; }
+.page-hero > .site-shell > p:last-child { max-width: 740px; margin: 25px 0 0; color: #a4aaa2; font-size: 20px; line-height: 1.65; }
+.glass-panel { border: 1px solid rgba(255,255,255,.11); border-radius: 20px; background: linear-gradient(120deg, rgba(255,255,255,.065), rgba(255,255,255,.025)); box-shadow: inset 0 1px rgba(255,255,255,.055), 0 18px 55px rgba(0,0,0,.16); backdrop-filter: blur(18px); }
+.content-section { padding: 76px 0 100px; }
+.prose-dark { max-width: 760px; margin-inline: auto; color: #b1b6af; font-size: 18px; line-height: 1.78; }
+.prose-dark h2, .prose-dark h3, .prose-dark h4 { color: #eef0ec; font-weight: 500; letter-spacing: -.02em; line-height: 1.2; }
+.prose-dark h2 { margin: 2.2em 0 .65em; font-size: 31px; }
+.prose-dark h3 { margin: 2em 0 .6em; font-size: 24px; }
+.prose-dark > :first-child { margin-top: 0; }
+.prose-dark > :last-child { margin-bottom: 0; }
+.prose-dark p { margin: 0 0 1.35em; }
+.prose-dark p + p { margin-top: -.15em; }
+.prose-dark ul, .prose-dark ol { display: grid; gap: .55em; margin: .35em 0 1.6em; padding-left: 1.35em; }
+.prose-dark ul { list-style: disc; }
+.prose-dark ol { list-style: decimal; }
+.prose-dark li { padding-left: .3em; }
+.prose-dark li::marker { color: #e87338; font-weight: 700; }
+.prose-dark li > p { margin: 0; }
+.prose-dark a { color: #ef8d5c; text-decoration: underline; text-underline-offset: 3px; }
+.prose-dark code { color: #f0a17a; }
+.prose-dark pre { overflow-x: auto; padding: 22px; border: 1px solid rgba(255,255,255,.1); border-radius: 14px; background: rgba(0,0,0,.3); }
+.prose-dark blockquote { margin-left: 0; padding-left: 22px; border-left: 2px solid #e87338; color: #d0d4ce; }
+.prose-dark img { max-width: 100%; border-radius: 16px; }
+
+@media (max-width: 700px) {
+	body.site-page { font-size: 16px; }
+	.site-shell { width: min(100% - 28px, 1040px); }
+	.header-inner { height: 68px; }
+	.main-nav { display: none; }
+	.wordmark { font-size: 15px; }
+	.wordmark-mark { width: 32px; height: 32px; }
+	.site-button-small { min-height: 36px; }
+	.page-hero { padding: 72px 0 52px; }
+	.page-hero h1 { font-size: 2.1rem; }
+	.page-hero > .site-shell > p:last-child { font-size: 17px; }
+	.footer-inner { min-height: 140px; flex-wrap: wrap; padding: 28px 0; }
 }
