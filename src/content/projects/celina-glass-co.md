@@ -17,7 +17,6 @@ featured: true
 
 categories:
   - Website
-  - SEO
 
 services:
   - Web Development
