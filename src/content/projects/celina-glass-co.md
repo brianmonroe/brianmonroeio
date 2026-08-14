@@ -7,7 +7,8 @@ type: website
 
 excerpt: A complete redesign focused on modern performance and showcasing the company's commercial work.
 
-featuredImage: https://placehold.co/600x400
+featuredImage: /images/work/celina-glass/fullpage-preview.webp
+previewImage: /images/work/celina-glass/fullpage-preview.webp
 
 website: https://celinaglass.com
 

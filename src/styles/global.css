@@ -115,6 +115,7 @@ body.site-page {
 	.site-shell { width: min(100% - 28px, 1040px); }
 	.header-inner { height: 68px; }
 	.main-nav { display: none; }
+	.header-inner > .site-button-small { display: none; }
 	.wordmark { font-size: 15px; }
 	.wordmark-mark { width: 32px; height: 32px; }
 	.site-button-small { min-height: 36px; }

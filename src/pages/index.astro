@@ -14,6 +14,7 @@ import {
 } from 'lucide-astro';
 import BaseHead from '../components/BaseHead.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import MobileNav from '../components/MobileNav.astro';
 import PhotographyGallery from '../components/PhotographyGallery.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
@@ -25,6 +26,19 @@ const projects = (await getCollection('projects')).sort(
 	(a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.year - a.data.year,
 );
 const featuredProject = projects.find((project) => project.data.featured) ?? projects[0];
+const categoryLabels: Record<string, string> = {
+	Website: 'Web',
+	Web: 'Web',
+	Photography: 'Photography',
+	Photo: 'Photography',
+	SEO: 'Miscellaneous',
+	Social: 'Miscellaneous',
+	'Social Media': 'Miscellaneous',
+	Print: 'Miscellaneous',
+};
+const featuredProjectTypes = featuredProject
+	? [...new Set(featuredProject.data.categories.map((category) => categoryLabels[category] ?? 'Miscellaneous'))]
+	: [];
 ---
 
 <!doctype html>
@@ -53,6 +67,7 @@ const featuredProject = projects.find((project) => project.data.featured) ?? pro
 					Let’s talk
 					<ArrowUpRight size={15} aria-hidden="true" />
 				</a>
+				<MobileNav contactHref="#contact-form" />
 			</div>
 		</header>
 
@@ -114,18 +129,19 @@ const featuredProject = projects.find((project) => project.data.featured) ?? pro
 				</div>
 
 				<article class="glass-card project-card">
-					<a class="project-thumb" href={`/work/${featuredProject.id}`} aria-label={`View ${featuredProject.data.title}`}>
-						<img src={featuredProject.data.featuredImage} alt="" loading="lazy" onerror="this.remove()" />
-						<span>{featuredProject.data.categories[0]}</span>
+					<a class:list={["project-thumb", { "scroll-preview": featuredProject.data.previewImage }]} href={`/work/${featuredProject.id}`} aria-label={`View ${featuredProject.data.title}`}>
+						<img src={featuredProject.data.previewImage ?? featuredProject.data.featuredImage} alt="" loading="lazy" onerror="this.remove()" />
+						{featuredProject.data.previewImage && <span class="preview-hint">Hover to preview</span>}
 					</a>
 					<div class="project-copy">
+						<div class="project-types">{featuredProjectTypes.map((type) => <span>{type}</span>)}</div>
 						<div class="project-topline"><p>{featuredProject.data.client}</p><span>{featuredProject.data.year}</span></div>
 						<h2 id="work-heading">{featuredProject.data.title}</h2>
 						<p class="project-excerpt">{featuredProject.data.excerpt}</p>
-						<div class="project-tags">{featuredProject.data.categories.map((category) => <span>{category}</span>)}</div>
 						<div class="preview-actions">
+							<a href={`/work/${featuredProject.id}`}>Project details <ArrowRight size={14} aria-hidden="true" /></a>
 							{featuredProject.data.website && <a href={featuredProject.data.website} target="_blank" rel="noopener noreferrer">View website <ArrowUpRight size={14} aria-hidden="true" /></a>}
-							<a href="/work">See more projects <ArrowRight size={14} aria-hidden="true" /></a>
+							<a href="/work">View more projects <ArrowRight size={14} aria-hidden="true" /></a>
 						</div>
 					</div>
 				</article>
@@ -260,16 +276,19 @@ const featuredProject = projects.find((project) => project.data.featured) ?? pro
 	.project-thumb { position: relative; align-self: start; height: 190px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); border-radius: 13px; background: radial-gradient(circle at 30% 20%, rgba(232,115,56,.38), transparent 35%), linear-gradient(145deg, #25342c, #111513); }
 	.project-thumb img { width: 100%; height: 100%; min-height: 190px; object-fit: cover; opacity: .78; filter: saturate(.7) contrast(1.04); transition: transform .35s, opacity .35s; }
 	.project-thumb:hover img { transform: scale(1.035); opacity: .9; }
-	.project-thumb span { position: absolute; left: 12px; bottom: 12px; padding: 5px 8px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; background: rgba(10,12,11,.68); color: #e1e4df; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; backdrop-filter: blur(8px); }
+	.project-thumb.scroll-preview img { height: auto; min-height: 100%; object-position: top center; transform: translateY(0); transition: transform 5s ease-in-out, opacity .35s, filter .35s; }
+	.project-thumb.scroll-preview:hover img { opacity: .9; transform: translateY(calc(190px - 100%)); }
+	.project-thumb .preview-hint { position: absolute; right: 12px; bottom: 12px; padding: 5px 8px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; background: rgba(10,12,11,.72); color: #d8dcd6; font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; backdrop-filter: blur(8px); pointer-events: none; transition: opacity .25s, transform .25s; }
+	.project-thumb:hover .preview-hint { opacity: 0; transform: translateY(4px); }
+	.project-types { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; }
+	.project-types span { color: #d88960; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 	.project-topline { display: flex; justify-content: space-between; gap: 20px; color: #858b84; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
 	.project-topline p { margin: 0; }
 	.project-copy h2 { margin-top: 9px; font-size: 26px; }
 	.project-excerpt { max-width: 670px; margin: 10px 0 0; color: var(--muted); font-size: 16px; line-height: 1.65; }
-	.project-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
-	.project-tags span { padding: 5px 9px; border: 1px solid rgba(255,255,255,.09); border-radius: 999px; color: #9ca29a; font-size: 11px; text-transform: uppercase; letter-spacing: .07em; }
 	.preview-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 20px; }
 	.preview-actions a { display: inline-flex; align-items: center; gap: 7px; color: #c7cbc5; font-size: 13px; font-weight: 700; transition: color .2s; }
-	.preview-actions a:first-child { color: #ed8a58; }
+	.preview-actions a:nth-child(2) { color: #ed8a58; }
 	.preview-actions a:hover { color: white; }
 	.project-link { margin-top: 1px; }
 	.contact-block {
@@ -300,6 +319,7 @@ const featuredProject = projects.find((project) => project.data.featured) ?? pro
 		.wordmark-mark { width: 32px; height: 32px; }
 		.header-inner { height: 68px; }
 		.main-nav { display: none; }
+		.header-inner > .button-small { display: none; }
 		.wordmark { font-size: 15px; }
 		.button-small { min-height: 36px; }
 		.intro { padding: 82px 0 74px; }
@@ -318,12 +338,18 @@ const featuredProject = projects.find((project) => project.data.featured) ?? pro
 		.project-card { grid-template-columns: 1fr; padding: 24px; gap: 20px; }
 		.project-thumb { grid-column: 1 / -1; height: 210px; }
 		.project-thumb img { min-height: 210px; }
+		.project-thumb.scroll-preview:hover img { transform: translateY(calc(210px - 100%)); }
 		.contact-block { grid-template-columns: 1fr; gap: 22px; margin: 58px 0; padding: 28px; }
 		.contact-orb { width: 56px; height: 56px; }
 		.contact-block .button { justify-self: start; }
 		.field-row { grid-template-columns: 1fr; }
 		.footer-inner { min-height: 140px; flex-wrap: wrap; padding: 28px 0; }
 	}
+	@media (prefers-reduced-motion: reduce) {
+		.project-thumb.scroll-preview img, .project-thumb.scroll-preview:hover img { transform: none; transition: opacity .35s, filter .35s; }
+		.project-thumb .preview-hint { display: none; }
+	}
+	@media (hover: none) { .project-thumb .preview-hint { display: none; } }
 </style>
 
 <script>

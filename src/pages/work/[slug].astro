@@ -1,6 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
-import { ArrowUpRight, Check, ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-astro';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-astro';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
@@ -13,6 +13,14 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const { Content } = await render(project);
 const isPhotography = project.data.categories.includes('Photography');
+const allProjects = await getCollection('projects');
+const relatedProject = allProjects
+	.filter((candidate) => candidate.id !== project.id)
+	.map((candidate) => ({
+		project: candidate,
+		sharedCategories: candidate.data.categories.filter((category) => project.data.categories.includes(category)).length,
+	}))
+	.sort((a, b) => b.sharedCategories - a.sharedCategories || b.project.data.year - a.project.data.year)[0]?.project;
 ---
 
 <!doctype html>
@@ -30,8 +38,9 @@ const isPhotography = project.data.categories.includes('Photography');
 						<div class="hero-tags">{project.data.categories.map((item) => <span>{item}</span>)}</div>
 						{project.data.website && <a class="site-button" href={project.data.website} target="_blank" rel="noopener noreferrer">Visit website <ArrowUpRight size={17} /></a>}
 					</div>
-					<div class="project-visual glass-panel">
-						<img src={project.data.featuredImage} alt="" onerror="this.remove()" />
+					<div class:list={["project-visual", "glass-panel", { "scroll-preview": project.data.previewImage }]}>
+						<img src={project.data.previewImage ?? project.data.featuredImage} alt="" onerror="this.remove()" />
+						{project.data.previewImage && <span class="preview-hint">Hover to preview page</span>}
 					</div>
 				</div>
 			</section>
@@ -61,6 +70,20 @@ const isPhotography = project.data.categories.includes('Photography');
 					</div>
 				</section>
 			)}
+			<nav class="project-navigation site-shell" aria-label="Project navigation">
+				<a class="back-to-work" href="/work"><ArrowLeft size={16} aria-hidden="true" /> Back to all work</a>
+				{relatedProject && (
+					<a class="related-project glass-panel" href={`/work/${relatedProject.id}`}>
+						<div class="related-image"><img src={relatedProject.data.featuredImage} alt="" loading="lazy" onerror="this.remove()" /></div>
+						<div class="related-copy">
+							<p class="related-label">Related project</p>
+							<span>{relatedProject.data.client}</span>
+							<h2>{relatedProject.data.title}</h2>
+						</div>
+						<span class="related-arrow" aria-hidden="true"><ArrowRight size={18} /></span>
+					</a>
+				)}
+			</nav>
 			<dialog class="detail-lightbox" aria-label={`${project.data.title} photo viewer`}>
 				<div class="detail-lightbox-frame">
 					<button class="detail-lightbox-close" type="button" aria-label="Close viewer"><X size={22} /></button>
@@ -81,8 +104,12 @@ const isPhotography = project.data.categories.includes('Photography');
 	.project-lead { max-width: 620px; margin: 22px 0 0; color: #a4aaa2; font-size: 20px; }
 	.hero-tags { display: flex; gap: 8px; margin: 24px 0; }
 	.hero-tags span { padding: 6px 10px; border: 1px solid rgba(255,255,255,.1); border-radius: 999px; color: #929890; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
-	.project-visual { min-height: 390px; overflow: hidden; background: linear-gradient(145deg, #314638, #111513); }
+	.project-visual { position: relative; height: 390px; overflow: hidden; background: linear-gradient(145deg, #314638, #111513); }
 	.project-visual img { width: 100%; height: 390px; object-fit: cover; opacity: .82; filter: saturate(.72); }
+	.project-visual.scroll-preview img { height: auto; min-height: 100%; object-position: top center; transform: translateY(0); transition: transform 7s ease-in-out, opacity .35s, filter .35s; }
+	.project-visual.scroll-preview:hover img { opacity: .92; filter: saturate(.9); transform: translateY(calc(390px - 100%)); }
+	.preview-hint { position: absolute; right: 16px; bottom: 16px; padding: 7px 11px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; background: rgba(7,9,8,.7); color: #d7dbd5; font-size: 11px; font-weight: 700; letter-spacing: .04em; backdrop-filter: blur(9px); pointer-events: none; transition: opacity .25s, transform .25s; }
+	.project-visual:hover .preview-hint { opacity: 0; transform: translateY(5px); }
 	.project-info { display: grid; grid-template-columns: 1fr 300px; gap: 80px; align-items: start; padding-top: 80px; padding-bottom: 110px; }
 	.prose-dark { margin: 0; width: 100%; }
 	.project-aside { position: sticky; top: 24px; display: grid; gap: 27px; padding: 26px; color: #949a93; font-size: 14px; }
@@ -102,6 +129,19 @@ const isPhotography = project.data.categories.includes('Photography');
 	.detail-photo-open:hover img { transform: scale(1.025); filter: saturate(1); }
 	.detail-photo-open span { position: absolute; right: 12px; bottom: 12px; display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; background: rgba(8,10,9,.62); opacity: 0; transition: opacity .2s; }
 	.detail-photo-open:hover span, .detail-photo-open:focus-visible span { opacity: 1; }
+	.project-navigation { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 30px; align-items: center; padding-bottom: 110px; }
+	.back-to-work { display: inline-flex; align-items: center; gap: 8px; color: #aeb3ac; font-size: 13px; font-weight: 700; transition: color .2s; }
+	.back-to-work:hover { color: #fff; }
+	.related-project { display: grid; grid-template-columns: 150px minmax(0, 1fr) 42px; gap: 24px; align-items: center; padding: 16px; color: inherit; transition: border-color .2s, transform .2s; }
+	.related-project:hover { border-color: rgba(232,115,56,.38); transform: translateY(-2px); }
+	.related-image { height: 105px; overflow: hidden; border-radius: 10px; background: #111513; }
+	.related-image img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.72); transition: filter .25s, transform .3s; }
+	.related-project:hover .related-image img { filter: saturate(.95); transform: scale(1.025); }
+	.related-copy { min-width: 0; }
+	.related-label { margin: 0 0 8px; color: #d88960; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+	.related-copy > span { color: #8e948d; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+	.related-copy h2 { margin: 5px 0 0; color: #eef0ec; font-size: 22px; font-weight: 500; letter-spacing: -.025em; }
+	.related-arrow { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; color: #d9ddd7; }
 	.detail-lightbox { inset: 0; width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(4,5,5,.96); color: white; }
 	.detail-lightbox::backdrop { background: rgba(4,5,5,.96); backdrop-filter: blur(12px); }
 	.detail-lightbox-frame { position: relative; display: grid; grid-template-columns: 72px minmax(0,1fr) 72px; align-items: center; width: 100%; height: 100%; padding: 42px 24px 24px; }
@@ -116,11 +156,23 @@ const isPhotography = project.data.categories.includes('Photography');
 		.project-hero-grid, .project-info { grid-template-columns: 1fr; }
 		.project-hero-grid { gap: 42px; }
 		.project-info { gap: 50px; }
-		.project-visual, .project-visual img { min-height: 260px; height: 260px; }
+		.project-visual, .project-visual img { height: 260px; }
+		.project-visual.scroll-preview:hover img { transform: translateY(calc(260px - 100%)); }
 		.project-aside { position: static; }
 		.gallery-grid { grid-template-columns: 1fr; }
 		.detail-photo-open:nth-child(3n + 1) { grid-column: auto; aspect-ratio: 3 / 2; }
+		.project-navigation { grid-template-columns: 1fr; gap: 22px; }
 		.detail-lightbox-frame { grid-template-columns: 52px minmax(0,1fr) 52px; padding-inline: 6px; }
+	}
+	@media(max-width: 520px) {
+		.related-project { grid-template-columns: 90px minmax(0, 1fr) 34px; gap: 14px; padding: 12px; }
+		.related-image { height: 82px; }
+		.related-copy h2 { font-size: 17px; }
+		.related-arrow { width: 32px; height: 32px; }
+	}
+	@media (hover: none), (prefers-reduced-motion: reduce) {
+		.project-visual.scroll-preview img, .project-visual.scroll-preview:hover img { transform: none; transition: opacity .35s, filter .35s; }
+		.preview-hint { display: none; }
 	}
 </style>
 

@@ -1,9 +1,9 @@
 ---
 title: Cleveland Browns Training Camp
-client: Cleveland Browns Training Camp
-excerpt: Sideline and behind-the-scenes photography from a Cleveland Browns training camp session.
-featuredImage: /images/work/photography/celina-moose-flag-day-2026-5.avif
-year: 2025
+client: Cleveland Browns
+excerpt: Sideline photography from the 2017 Cleveland Browns training camp.
+featuredImage: /images/work/photography/20170817_brownscamp-2.webp
+year: 2017
 featured: false
 categories:
   - Photography
@@ -13,9 +13,9 @@ services:
   - Photo Editing
 technologies: []
 gallery:
-  - /images/work/photography/celina-moose-flag-day-2026-5.avif
-  - /images/work/photography/2026-senior-owen-109.jpg
-  - /images/work/photography/derby_02.jpg
+  - /images/work/photography/20170817_brownscamp-2.webp
+  - /images/work/photography/20170817_brownscamp-5.webp
+  - /images/work/photography/20170817_brownscamp-8.webp
 ---
 
 ## About the Set
